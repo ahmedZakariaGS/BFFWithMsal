@@ -15,6 +15,8 @@ import { IPublicClientApplication, InteractionType, PublicClientApplication } fr
 import { loginRequest, msalConfig, protectedResources } from './core/authSettings';
 import { CompleteLoginComponent } from './CompleteLogin/CompleteLogin.component';
 import { AuthService } from './services/auth.service';
+import { SpinnerComponent } from './spinner/spinner/spinner.component';
+import { AuthInterceptor } from './core/AuthInterceptor';
 
 /**
  * Here we pass the configuration parameters to create an MSAL instance.
@@ -60,7 +62,8 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
     CounterComponent,
     FetchDataComponent,
     LoginComponent,
-    CompleteLoginComponent
+    CompleteLoginComponent,
+    SpinnerComponent
    ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -82,7 +85,12 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
   ],
   providers: [
 
+    {
+      provide:HTTP_INTERCEPTORS,
+      useClass:AuthInterceptor,
+      multi:true,
 
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: MsalInterceptor,
